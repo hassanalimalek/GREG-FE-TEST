@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ChatGpt - V1</title>
+
+  <!-- Web Awesome CDN (required by your instructions) -->
+  <!-- NOTE: replace version `1.2.3` with the real version number if you have one -->
+  <!-- <link rel="stylesheet" href="https://cdn.webawesome.com/1.2.3/webawesome.min.css"> -->
+    
+  <!-- Optional small Web Awesome JS if needed for components (assumed) -->
+  <!-- <script defer src="https://cdn.webawesome.com/1.2.3/webawesome.min.js"></script> -->
+
+  <!-- Mobile-first custom styles (uses Web Awesome custom properties) -->
+  <style>
+    /* ==========================================================
+       Theme variables: using Web Awesome color custom properties
+       (Assuming Web Awesome exposes custom properties like below).
+       If your Web Awesome version uses different names, update accordingly.
+       ========================================================== */
+    :root{
+      /* Examples of Web Awesome color variables (use real ones if available) */
+      --wa-bg: var(--wa-background, #0f1724);
+      --wa-surface: var(--wa-surface, #0b1220);
+      --wa-primary: var(--wa-primary, #0066ff);
+      --wa-accent: var(--wa-accent, #22c55e);
+      --wa-muted: var(--wa-muted, #9aa4b2);
+      --wa-on-primary: var(--wa-on-primary, #ffffff);
+      --wa-radius: 12px;
+      --max-width: 1200px;
+      --container-padding: 1rem;
+    }
+
+    /* Base page layout */
+    html,body{height:100%;}
+    body{
+      margin:0;
+      font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      background: linear-gradient(180deg,var(--wa-bg),#071021 80%);
+      color: #e6eef6;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.4;
+    }
+
+    .page{
+      max-width:var(--max-width);
+      margin:0 auto;
+      padding:1.5rem var(--container-padding);
+    }
+
+    /* -------- Hero Section -------- */
+    .hero{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:1.25rem;
+      align-items:center;
+      padding:3rem 0;
+    }
+    .hero-inner{
+      display:flex;
+      flex-direction:column;
+      gap:1rem;
+    }
+    .headline{
+      font-size:clamp(1.6rem,4vw,2.8rem);
+      font-weight:700;
+      letter-spacing:-0.02em;
+      color:var(--wa-on-primary);
+    }
+    .subhead{color:var(--wa-muted);max-width:64ch}
+
+    .cta-row{display:flex;gap:.75rem;flex-wrap:wrap;}
+    .btn-primary{
+      background:var(--wa-primary);
+      color:var(--wa-on-primary);
+      border:none;padding:.85rem 1.25rem;border-radius:10px;font-weight:600;
+      box-shadow:0 6px 18px rgba(2,6,23,0.55);
+    }
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:.85rem 1rem;border-radius:10px;color:var(--wa-on-primary)}
+
+    /* Small hero image / illustration */
+    .hero-visual{display:flex;justify-content:center;align-items:center;padding:1rem}
+    .hero-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:1rem;border-radius:var(--wa-radius);backdrop-filter:blur(6px);}
+
+    /* -------- Services Section -------- */
+    .section-title{font-size:1.05rem;font-weight:700;margin-bottom:.5rem}
+    .services{
+      margin:2rem 0;
+      /* make this a container for container queries */
+      container-type: inline-size; /* <-- container queries enabled here */
+      container-name: services;
+    }
+
+    .services-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:1rem;
+    }
+
+    /* Container query: when the container is >=700px, show two columns; >=1000px -> 3 columns */
+    @container services (min-width:700px){
+      .services-grid{grid-template-columns:repeat(2,1fr);}
+    }
+    @container services (min-width:1000px){
+      .services-grid{grid-template-columns:repeat(3,1fr);}
+    }
+
+    .service-card{
+      background:var(--wa-surface);
+      padding:1rem;border-radius:12px;display:flex;gap:1rem;align-items:flex-start;min-height:6rem;transition:transform .18s ease, box-shadow .18s ease;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+    .service-card:hover{transform:translateY(-6px);box-shadow:0 10px 30px rgba(2,6,23,0.45)}
+
+    .service-icon{width:44px;height:44px;flex:0 0 44px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(180deg,var(--wa-primary),#0047d6)}
+
+    /* Using :has() to style parent card when a child checkbox is checked (interactive state)
+       Example: expand details when the invisible toggle is checked */
+    .service-card:has(input[type="checkbox"]:checked) {
+      border-color: rgba(34,197,94,0.6);
+      box-shadow:0 14px 40px rgba(34,197,94,0.08);
+      transform:translateY(-8px) scale(1.01);
+    }
+    .service-details{flex:1}
+    .service-title{font-weight:700}
+    .service-desc{color:var(--wa-muted);font-size:.95rem}
+
+    /* -------- Portfolio Section -------- */
+    .portfolio{
+      margin:2rem 0;
+    }
+    .portfolio-grid{
+      display:grid;grid-template-columns:1fr;gap:0.75rem;
+    }
+    @media(min-width:700px){
+      .portfolio-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(min-width:1000px){
+      .portfolio-grid{grid-template-columns:repeat(3,1fr)}
+    }
+    .project-card{background:var(--wa-surface);border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.04)}
+    .project-image{width:100%;height:180px;object-fit:cover;display:block}
+    .project-body{padding:.75rem}
+
+    /* -------- Contact Section -------- */
+    .contact{margin:2rem 0;padding:1rem;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);border:1px solid rgba(255,255,255,0.03)}
+    .contact-list{display:flex;flex-direction:column;gap:.65rem}
+    .contact-item{display:flex;gap:.75rem;align-items:center}
+
+    /* Footer */
+    footer{padding:1.25rem 0;color:var(--wa-muted);font-size:.9rem}
+
+    /* Utility */
+    .row{display:flex;gap:.75rem;align-items:center}
+    .muted{color:var(--wa-muted)}
+    .visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap;border:0;padding:0;margin:-1px}
+
+    /* Small screens adjustments */
+    @media (min-width:900px){
+      .hero{grid-template-columns:1fr 380px}
+      .hero-visual{justify-self:end}
+    }
+  </style>
+</head>
+<body>
+  <main class="page" id="main">
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-inner">
+        <div>
+          <p class="muted">Digital Agency · Design & Development</p>
+          <h1 id="hero-title" class="headline">We craft beautiful digital experiences</h1>
+          <p class="subhead">A small team of designers and engineers building focused brands, products and campaigns. We combine strategy, design and engineering to deliver measurable outcomes.</p>
+        </div>
+
+        <div class="row cta-row" role="group" aria-label="Primary call to actions">
+          <button class="btn-primary" id="primary-cta">Start a project</button>
+
+          <!-- Popover trigger uses the Popover API (see JS) -->
+          <button id="pricing-info" class="btn-ghost" aria-haspopup="dialog" aria-controls="pricing-popover">Pricing</button>
+
+          <a class="btn-ghost" href="#portfolio">Our work</a>
+        </div>
+
+        <div class="hero-visual">
+          <div class="hero-card" aria-hidden="true">
+            <!-- Inline SVG (serves as one of required SVG icons/images) -->
+            <svg width="220" height="120" viewBox="0 0 220 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="2" y="2" width="216" height="116" rx="10" fill="url(#g)"/>
+              <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#1143ff" stop-opacity="0.85"/><stop offset="1" stop-color="#00d18a" stop-opacity="0.85"/></linearGradient></defs>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="services" aria-labelledby="services-title">
+      <h2 id="services-title" class="section-title">Services</h2>
+
+      <div class="services-grid">
+        <!-- Service card 1 (has a hidden checkbox toggle used with :has()) -->
+        <label class="service-card" for="s1-toggle">
+          <div class="service-icon" aria-hidden="true">
+            <!-- SVG icon 1 -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 12h18" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M12 3v18" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <input type="checkbox" id="s1-toggle" class="visually-hidden" aria-hidden="true"/>
+
+          <div class="service-details">
+            <div class="service-title">Brand Strategy</div>
+            <div class="service-desc">Clarify your message, position your product and create a strategy that scales.</div>
+          </div>
+        </label>
+
+        <!-- Service card 2 -->
+        <label class="service-card" for="s2-toggle">
+          <div class="service-icon" aria-hidden="true">
+            <!-- SVG icon 2 -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 7h18M3 12h18M3 17h18" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <input type="checkbox" id="s2-toggle" class="visually-hidden" aria-hidden="true"/>
+
+          <div class="service-details">
+            <div class="service-title">UX / UI Design</div>
+            <div class="service-desc">User-centred design — prototypes, flows and visual systems that convert.</div>
+          </div>
+        </label>
+
+        <!-- Service card 3 -->
+        <label class="service-card" for="s3-toggle">
+          <div class="service-icon" aria-hidden="true">
+            <!-- SVG icon 3 -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 20h16V8H4v12zM9 4h6v4H9V4z" stroke="#fff" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <input type="checkbox" id="s3-toggle" class="visually-hidden" aria-hidden="true"/>
+
+          <div class="service-details">
+            <div class="service-title">Web Development</div>
+            <div class="service-desc">Modern front-end, accessible components and scalable backend integrations.</div>
+          </div>
+        </label>
+
+        <!-- Service card 4 -->
+        <label class="service-card" for="s4-toggle">
+          <div class="service-icon" aria-hidden="true">
+            <!-- SVG icon 4 -->
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="8" r="3" stroke="#fff" stroke-width="1.3"/><path d="M4 21c2-4 6-6 8-6s6 2 8 6" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/>
+            </svg>
+          </div>
+
+          <input type="checkbox" id="s4-toggle" class="visually-hidden" aria-hidden="true"/>
+
+          <div class="service-details">
+            <div class="service-title">Marketing & Growth</div>
+            <div class="service-desc">Campaigns, analytics and growth loops tuned for retention and revenue.</div>
+          </div>
+        </label>
+
+      </div>
+    </section>
+
+    <!-- PORTFOLIO -->
+    <section id="portfolio" class="portfolio" aria-labelledby="portfolio-title">
+      <h2 id="portfolio-title" class="section-title">Selected Projects</h2>
+      <div class="portfolio-grid" role="list">
+
+        <!-- Project 1 -->
+        <article class="project-card" role="listitem" aria-label="Project Alpha">
+          <img class="project-image" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='700' viewBox='0 0 1200 700' preserveAspectRatio='xMidYMid slice'><rect width='100%' height='100%' fill='%2308142A'/><circle cx='220' cy='120' r='68' fill='%23007bff' opacity='0.9'/><rect x='400' y='200' rx='18' ry='18' width='560' height='300' fill='%2300d18a' opacity='0.9'/></svg>" alt="Project Alpha preview"/>
+          <div class="project-body">
+            <h3 style="margin:.2rem 0">Project Alpha</h3>
+            <p class="muted" style="margin:0">Brand refresh and marketing site for a fintech startup.</p>
+          </div>
+        </article>
+
+        <!-- Project 2 -->
+        <article class="project-card" role="listitem" aria-label="Project Beta">
+          <img class="project-image" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='700' viewBox='0 0 1200 700'><rect width='100%' height='100%' fill='%2311202B'/><polygon points='0,400 1200,0 1200,700' fill='%23006fff' opacity='0.85'/></svg>" alt="Project Beta preview"/>
+          <div class="project-body">
+            <h3 style="margin:.2rem 0">Project Beta</h3>
+            <p class="muted" style="margin:0">E-commerce redesign with conversion optimisation.</p>
+          </div>
+        </article>
+
+        <!-- Project 3 -->
+        <article class="project-card" role="listitem" aria-label="Project Gamma">
+          <img class="project-image" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 700'><rect width='100%' height='100%' fill='%230b1b2b'/><circle cx='960' cy='180' r='110' fill='%23ffb703' opacity='0.9'/></svg>" alt="Project Gamma preview"/>
+          <div class="project-body">
+            <h3 style="margin:.2rem 0">Project Gamma</h3>
+            <p class="muted" style="margin:0">Mobile app design and front-end implementation.</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact" aria-labelledby="contact-title">
+      <h2 id="contact-title" class="section-title">Get in touch</h2>
+      <p class="muted">Interested in working together? Send a message or book a quick call.</p>
+
+      <div class="contact-list">
+        <div class="contact-item">
+          <!-- Inline SVG icon email -->
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 6.5A2.5 2.5 0 0 1 5.5 4h13A2.5 2.5 0 0 1 21 6.5v11A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5v-11z" fill="none" stroke="#fff" stroke-width="1.2"/></svg>
+          <div>
+            <div style="font-weight:600">hello@digital.agency</div>
+            <div class="muted">We usually reply in 24–48 hours</div>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <!-- Inline SVG phone -->
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.1c1.3 2.6 3.6 4.9 6.2 6.2l1.9-1.9a1 1 0 0 1 1-.2c1.1.4 2.2.6 3.3.6a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C8.3 21 3 15.7 3 8a1 1 0 0 1 1-1h2.8a1 1 0 0 1 1 1c0 1.1.2 2.2.6 3.3.2.4.1.9-.2 1L6.6 10.1z" fill="none" stroke="#fff" stroke-width="1.1"/></svg>
+          <div>
+            <div style="font-weight:600">+1 (555) 123-456</div>
+            <div class="muted">Mon–Fri, 9am–6pm PST</div>
+          </div>
+        </div>
+
+        <div class="contact-item">
+          <!-- Inline SVG location -->
+          <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7z" fill="none" stroke="#fff" stroke-width="1.1"/></svg>
+          <div>
+            <div style="font-weight:600">Remote — Based in USA</div>
+            <div class="muted">Distributed team</div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <footer>
+      <div class="row" style="justify-content:space-between;align-items:center;">
+        <div>© <strong>Digital Agency</strong> • 2025</div>
+        <nav aria-label="Footer">
+          <a href="#portfolio" class="muted" style="margin-left:1rem">Work</a>
+          <a href="#contact" class="muted" style="margin-left:1rem">Contact</a>
+        </nav>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ====== Popover element required by the Popover API ====== -->
+  <dialog id="pricing-popover" role="dialog" aria-label="Pricing details">
+    <div style="padding:1rem;max-width:320px">
+      <h3 style="margin:0 0 .5rem">Pricing (starting)</h3>
+      <p class="muted" style="margin:0 0 .75rem">Small projects: <strong>$3,500</strong> · MVPs: <strong>$12,000+</strong></p>
+      <p style="margin:0;font-size:.95rem;">Estimates vary — tell us about your project for a tailored quote.</p>
+      <div style="display:flex;gap:.5rem;margin-top:.75rem;justify-content:flex-end">
+        <button id="popover-close" class="btn-ghost">Close</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    // Modern JS (ES6+). Feature detect Popover API and Dialog.
+
+    const pricingBtn = document.getElementById('pricing-info');
+    const popover = document.getElementById('pricing-popover');
+    const popoverClose = document.getElementById('popover-close');
+
+    // Accessibility: manage aria-expanded
+    pricingBtn.addEventListener('click', async () => {
+      // If element.showPopover is supported, use it. This is the Popover API.
+      // We also provide a dialog fallback using showModal() for browsers that don't have showPopover.
+
+      // Explanation (in comments):
+      // - We call pricingBtn.showPopover(popover) if available. The Popover API attaches a transient
+      //   popup positioned relative to the element. It restores focus correctly and is lightweight.
+      // - Fallback: use <dialog>.showModal() positioned near center — accessible and widely supported.
+
+      try {
+        if (typeof pricingBtn.showPopover === 'function' && 'popover' in HTMLElement.prototype) {
+          // Modern Popover API call. Provide an options object if needed (alignment, etc.).
+          pricingBtn.showPopover(popover, {placement: 'bottom', autoFocus: true});
+          pricingBtn.setAttribute('aria-expanded', 'true');
+        } else if (typeof popover.showModal === 'function') {
+          popover.showModal();
+          pricingBtn.setAttribute('aria-expanded', 'true');
+        } else {
+          // Last resort: toggle visibility
+          popover.style.display = popover.style.display === 'block' ? 'none' : 'block';
+          pricingBtn.setAttribute('aria-expanded', popover.style.display === 'block' ? 'true' : 'false');
+        }
+      } catch (e) {
+        console.warn('Popover API not available or failed, fallback used.', e);
+        if (typeof popover.showModal === 'function') popover.showModal();
+      }
+    });
+
+    // Close handlers for the popover/dialog
+    popoverClose.addEventListener('click', () => {
+      if (typeof popover.close === 'function') popover.close();
+      pricingBtn.setAttribute('aria-expanded', 'false');
+    });
+
+    // When the dialog is closed with ESC or outside click, update the aria state.
+    popover.addEventListener('close', () => pricingBtn.setAttribute('aria-expanded', 'false'));
+
+    // Keyboard access: allow Enter/Space to open
+    pricingBtn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        pricingBtn.click();
+      }
+    });
+
+    /* Additional progressive enhancement: prefer reduced-motion and respect prefers-reduced-motion */
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.style.setProperty('--motion-duration', '0ms');
+    }
+
+    // Small JS for CTA smooth scroll
+    document.getElementById('primary-cta').addEventListener('click', ()=>{
+      document.getElementById('contact-title').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+
+    // Note: no heavy JS frameworks used. All interactive features are lightweight and progressive.
+  </script>
+
+  <!--
+    ============================================================
+    COMMENTS & NOTES (required by deliverables)
+
+    1) How Popover API is used:
+       - We attempt to use the modern Popover API by calling pricingBtn.showPopover(popover, options).
+       - If not supported, we fall back to the <dialog>.showModal() API or a simple CSS toggle.
+       - The popover element is a <dialog> for accessibility; the Popover API can accept any element.
+
+    2) Where container queries are implemented:
+       - The .services section has `container-type: inline-size; container-name: services;`.
+         We use `@container services (min-width:700px)` and `(min-width:1000px)` to change
+         .services-grid's columns. This is a mobile-first approach and only relies on the
+         component's container width (not the viewport width).
+
+    3) Where the :has() pseudo-selector is used:
+       - The CSS rule `.service-card:has(input[type="checkbox"]:checked)` changes the parent
+         card appearance when the child checkbox is checked. This demonstrates parent styling
+         based on child state, allowing purely-CSS interactivity (expand/selected state) without JS.
+
+    4) SVG optimization approach (how to compress/optimize SVGs):
+       - Keep SVGs as inline SVG when you need to style them or ensure accessibility.
+       - Remove unnecessary metadata, comments, hidden layers and editor-specific attributes.
+       - Use tools like svgo (CLI) or online compressors to:
+         * remove redundant attributes, collapse transforms, combine paths, and remove hidden elements.
+         * minify numeric precision (e.g. 2-3 decimal places) where extreme precision isn't needed.
+       - Use <symbol> and <use> if you reuse identical icons frequently to avoid duplication.
+       - Prefer SVGs without embedded raster images; if you must include large illustrations, export them as compressed WebP/AVIF and use them as <img>.
+       - Inline small SVGs (icons) for reduced requests; external optimized SVG sprite for many icons.
+
+    5) Accessibility considerations:
+       - All interactive controls have ARIA attributes (aria-haspopup, aria-controls, aria-expanded).
+       - Popover uses a <dialog> (role=dialog) which is keyboard accessible; we also manage aria-expanded.
+       - All images include alt text; decorative SVGs include aria-hidden="true".
+       - Keyboard handlers added for Enter/Space to trigger popover; visual focus states rely on the UA.
+
+    6) Modern CSS & layout choices:
+       - Mobile-first design using Grid & Flexbox; no floats or table layouts.
+       - Container queries for component-based responsive behavior.
+       - :has() used for purely CSS-driven interactive states.
+
+    ============================================================
+  -->
+</body>
+</html>

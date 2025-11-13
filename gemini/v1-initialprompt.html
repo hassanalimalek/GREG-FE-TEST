@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini - V1</title>
+
+    <!-- 
+      WEB AWESOME FRAMEWORK SETUP 
+      - We are including the light theme CSS and the component library JavaScript.
+      - The `type="module"` is required for the ES module-based component library.
+    -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@web-awesome/components@1.0.9/dist/themes/light.min.css" />
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@web-awesome/components@1.0.9/dist/web-awesome.min.js"></script>
+
+    <style>
+        /* 
+          CSS REQUIREMENTS CHECKLIST:
+          - [x] Modern CSS Grid and Flexbox
+          - [x] Responsive design with media queries
+          - [x] Web Awesome's color variables
+          - [x] NO outdated practices (floats, etc.)
+          - [x] Mobile-first approach
+        */
+
+        /* ------------------------- */
+        /* --- GLOBAL & UTILITY STYLES --- */
+        /* ------------------------- */
+        :root {
+            /* Using Web Awesome's font variables for consistency */
+            font-family: var(--wa-font-sans);
+            scroll-behavior: smooth;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--wa-color-neutral-0);
+            color: var(--wa-color-neutral-800);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            line-height: 1.2;
+            color: var(--wa-color-neutral-1000);
+        }
+
+        h1 { font-size: clamp(2.5rem, 5vw, 4rem); }
+        h2 { font-size: clamp(2rem, 4vw, 3rem); text-align: center; }
+        h3 { font-size: 1.5rem; }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        section {
+            padding: 4rem 0;
+        }
+
+        /* ------------------------- */
+        /* --- HEADER --- */
+        /* ------------------------- */
+        .main-header {
+            padding: 1.5rem 0;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid var(--wa-color-neutral-200);
+        }
+
+        .main-header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--wa-color-primary-500);
+            text-decoration: none;
+        }
+
+        /* ------------------------- */
+        /* --- HERO SECTION --- */
+        /* ------------------------- */
+        #hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: 80vh;
+            padding: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: var(--wa-color-neutral-600);
+            margin: 1.5rem 0;
+        }
+        
+        /* A decorative background SVG */
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        /* ------------------------- */
+        /* --- SERVICES SECTION --- */
+        /* ------------------------- */
+        #services {
+            background-color: var(--wa-color-neutral-50);
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Mobile-first: single column */
+            gap: 2rem;
+            margin-top: 3rem;
+            /* 
+              ** BROWSER API: Container Queries (Setup) **
+              Here, we establish the grid as a query container. This allows
+              child elements (the cards) to respond to the container's width,
+              not the viewport's width. `inline-size` tracks width changes.
+            */
+            container-type: inline-size;
+            container-name: services-container;
+        }
+
+        /* On larger screens, the grid becomes a multi-column layout */
+        @media (min-width: 768px) {
+            .services-grid {
+                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            }
+        }
+
+        .service-card {
+            /* Using Web Awesome's Card component with custom styles */
+            --wa-card-padding: 2rem;
+        }
+
+        .service-card-content {
+            display: flex;
+            flex-direction: column; /* Default: icon on top */
+            align-items: center;
+            text-align: center;
+            gap: 1rem;
+        }
+
+        .service-card-content wa-icon {
+            font-size: 3rem;
+            color: var(--wa-color-primary-500);
+        }
+
+        /* 
+          ** BROWSER API: Container Queries (Usage) **
+          This query applies ONLY when the container named `services-container` 
+          (our `.services-grid`) provides at least 380px of width to its children.
+          When it does, the card's content switches to a horizontal layout.
+          This is more robust than a viewport-based media query.
+        */
+        @container services-container (min-width: 380px) {
+            .service-card-content {
+                flex-direction: row; /* Icon and text side-by-side */
+                text-align: left;
+                align-items: flex-start;
+            }
+        }
+
+        /* ------------------------- */
+        /* --- POPOVER API STYLING --- */
+        /* ------------------------- */
+        #service-details-popover {
+            padding: 1.5rem;
+            border: 1px solid var(--wa-color-neutral-200);
+            border-radius: var(--wa-border-radius-lg);
+            box-shadow: var(--wa-shadow-lg);
+            max-width: 400px;
+            background: var(--wa-color-neutral-0);
+        }
+        
+        #service-details-popover p {
+            margin-top: 0.5rem;
+        }
+
+        /* Style the backdrop that appears behind the popover */
+        #service-details-popover::backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+        }
+
+
+        /* ------------------------- */
+        /* --- PORTFOLIO SECTION --- */
+        /* ------------------------- */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .portfolio-item {
+            border-radius: var(--wa-border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--wa-shadow-md);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: var(--wa-color-neutral-0);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .portfolio-item-image {
+            background-color: var(--wa-color-neutral-100);
+            padding: 2rem;
+            display: grid;
+            place-items: center;
+            flex-grow: 1; /* Allows image area to grow */
+        }
+        
+        .portfolio-item-image svg {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+        }
+
+        .portfolio-item-content {
+            padding: 1.5rem;
+        }
+
+        .portfolio-item-content a {
+            text-decoration: none;
+            color: var(--wa-color-primary-600);
+            font-weight: 600;
+        }
+        
+        .portfolio-item-content a::after {
+            content: ' →';
+        }
+
+        /* 
+          ** BROWSER API: :has() Pseudo-selector **
+          This is a powerful feature. We are styling the PARENT element (`.portfolio-item`)
+          based on the state of a CHILD element (`a:hover` or `a:focus`).
+          When the link inside is hovered or focused, the entire card "lifts up"
+          and gets a vibrant shadow, providing great user feedback.
+        */
+        .portfolio-item:has(a:hover),
+        .portfolio-item:has(a:focus) {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(var(--wa-color-primary-500-rgb), 0.2), 
+                        0 4px 8px rgba(var(--wa-color-primary-500-rgb), 0.15);
+        }
+
+        /* ------------------------- */
+        /* --- CONTACT SECTION --- */
+        /* ------------------------- */
+        #contact {
+            background-color: var(--wa-color-neutral-900);
+            color: var(--wa-color-neutral-200);
+        }
+        #contact h2 {
+            color: var(--wa-color-neutral-0);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column; /* Mobile first: stack vertically */
+            gap: 2rem;
+            align-items: center;
+            margin-top: 3rem;
+            text-align: center;
+        }
+        
+        @media (min-width: 768px) {
+            .contact-info {
+                flex-direction: row; /* Side-by-side on larger screens */
+                justify-content: space-around;
+                text-align: left;
+            }
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .contact-item wa-icon {
+            font-size: 2rem;
+            color: var(--wa-color-primary-400);
+        }
+        
+        .contact-item a {
+            color: var(--wa-color-neutral-100);
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+        .contact-item a:hover {
+            color: var(--wa-color-primary-300);
+            text-decoration: underline;
+        }
+
+        /* ------------------------- */
+        /* --- FOOTER --- */
+        /* ------------------------- */
+        .main-footer {
+            text-align: center;
+            padding: 2rem 0;
+            background-color: var(--wa-color-neutral-100);
+            font-size: 0.9rem;
+            color: var(--wa-color-neutral-600);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="main-header">
+        <div class="container">
+            <a href="#" class="logo">Innovate</a>
+            <wa-button href="#contact" variant="primary" outline>Contact Us</wa-button>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- HERO SECTION -->
+        <section id="hero">
+            <!-- 
+                SVG OPTIMIZATION EXPLANATION (Hero Background)
+                - This SVG is inline for faster rendering (no extra HTTP request).
+                - It has minimal attributes: only `viewBox`, `xmlns`, and the path data.
+                - We removed editor-specific metadata (like from Illustrator or Inkscape).
+                - For complex SVGs, tools like SVGOMG (https://jakearchibald.github.io/svgomg/)
+                  can be used to automatically minify the code, combine paths, and reduce precision,
+                  significantly shrinking file size.
+            -->
+            <svg class="hero-bg" viewBox="0 0 1440 500" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0,256L48,245.3C96,235,192,213,288,197.3C384,181,480,171,576,192C672,213,768,267,864,288C960,309,1056,299,1152,266.7C1248,235,1344,181,1392,154.7L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z" fill="currentColor" fill-opacity="1"></path>
+            </svg>
+            <div class="container hero-content">
+                <h1>Crafting Digital Experiences That Inspire</h1>
+                <p>We are Innovate, a full-service digital agency that builds beautiful, effective, and user-friendly websites and applications.</p>
+                <wa-button href="#services" variant="primary" size="large">
+                    Our Services
+                    <wa-icon name="arrow-right-line" slot="suffix"></wa-icon>
+                </wa-button>
+            </div>
+        </section>
+
+        <!-- SERVICES SECTION -->
+        <section id="services">
+            <div class="container">
+                <h2>What We Do</h2>
+                <div class="services-grid">
+                    <!-- Service Card 1 -->
+                    <wa-card class="service-card">
+                        <div class="service-card-content">
+                            <wa-icon name="layout-line"></wa-icon>
+                            <div>
+                                <h3>Web Design & UX</h3>
+                                <p>Creating intuitive and stunning user interfaces that engage your audience.</p>
+                            </div>
+                        </div>
+                    </wa-card>
+                    
+                    <!-- Service Card 2 -->
+                    <wa-card class="service-card">
+                        <div class="service-card-content">
+                            <wa-icon name="code-s-slash-line"></wa-icon>
+                            <div>
+                                <h3>Web Development</h3>
+                                <p>Building robust, scalable, and high-performance websites and web apps.</p>
+                            </div>
+                        </div>
+                    </wa-card>
+
+                    <!-- Service Card 3 -->
+                    <wa-card class="service-card">
+                        <div class="service-card-content">
+                            <wa-icon name="megaphone-line"></wa-icon>
+                            <div>
+                                <h3>Digital Marketing</h3>
+                                <p>Driving growth with data-driven SEO, SEM, and social media strategies.</p>
+                            </div>
+                        </div>
+                    </wa-card>
+                    
+                    <!-- Service Card 4 -->
+                    <wa-card class="service-card">
+                        <div class="service-card-content">
+                            <wa-icon name="cloud-line"></wa-icon>
+                            <div>
+                                <h3>Cloud Solutions</h3>
+                                <p>Deploying and managing your applications on modern cloud infrastructure.</p>
+                                <!-- 
+                                  ** BROWSER API: Popover API (Usage) **
+                                  This is a native HTML popover.
+                                  - The `<button>` has a `popovertarget` attribute pointing to the ID of the popover element.
+                                  - The `<div>` has the `popover` attribute, making it a popover.
+                                  - No JavaScript is needed for this basic toggle functionality.
+                                -->
+                                <wa-button popovertarget="service-details-popover" variant="neutral" size="small" style="margin-top: 1rem;">
+                                    More Details
+                                </wa-button>
+                            </div>
+                        </div>
+                    </wa-card>
+                </div>
+            </div>
+        </section>
+
+        <!-- Popover Element - Placed outside the main flow -->
+        <div id="service-details-popover" popover>
+            <h3>Advanced Cloud Solutions</h3>
+            <p>We provide comprehensive cloud services including migration, containerization with Docker & Kubernetes, and serverless architecture design to ensure your application is scalable, secure, and cost-effective.</p>
+            <wa-button popovertarget="service-details-popover" popovertargetaction="hide" variant="primary" size="small" style="margin-top: 1rem;">
+              Close
+            </wa-button>
+        </div>
+
+
+        <!-- PORTFOLIO SECTION -->
+        <section id="portfolio">
+            <div class="container">
+                <h2>Our Recent Work</h2>
+                <div class="portfolio-grid">
+                    <!-- Portfolio Item 1 -->
+                    <article class="portfolio-item">
+                        <div class="portfolio-item-image">
+                            <!-- Inline SVG for a portfolio project -->
+                            <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="180" height="130" rx="10" fill="var(--wa-color-neutral-200)"/><rect x="25" y="25" width="150" height="15" fill="var(--wa-color-primary-200)"/><rect x="25" y="50" width="100" height="10" fill="var(--wa-color-neutral-300)"/><rect x="25" y="70" width="150" height="55" fill="var(--wa-color-neutral-300)"/><circle cx="150" cy="80" r="15" fill="var(--wa-color-primary-400)"/></svg>
+                        </div>
+                        <div class="portfolio-item-content">
+                            <h3>E-commerce Platform</h3>
+                            <p>A scalable online store for a leading fashion brand.</p>
+                            <a href="#" aria-label="View project for E-commerce Platform">View Project</a>
+                        </div>
+                    </article>
+
+                    <!-- Portfolio Item 2 -->
+                    <article class="portfolio-item">
+                        <div class="portfolio-item-image">
+                            <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="180" height="130" rx="10" fill="var(--wa-color-neutral-200)"/><path d="M 30 110 C 60 40, 100 130, 170 60" stroke="var(--wa-color-primary-500)" fill="none" stroke-width="8" stroke-linecap="round"/><circle cx="30" cy="110" r="5" fill="var(--wa-color-primary-600)"/><circle cx="170" cy="60" r="5" fill="var(--wa-color-primary-600)"/></svg>
+                        </div>
+                        <div class="portfolio-item-content">
+                            <h3>Analytics Dashboard</h3>
+                            <p>Data visualization tool for a major fintech company.</p>
+                            <a href="#" aria-label="View project for Analytics Dashboard">View Project</a>
+                        </div>
+                    </article>
+
+                    <!-- Portfolio Item 3 -->
+                    <article class="portfolio-item">
+                        <div class="portfolio-item-image">
+                            <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><rect x="60" y="15" width="80" height="120" rx="10" fill="var(--wa-color-neutral-200)"/><rect x="70" y="25" width="60" height="90" fill="var(--wa-color-primary-100)"/><circle cx="100" cy="125" r="4" fill="var(--wa-color-neutral-400)"/></svg>
+                        </div>
+                        <div class="portfolio-item-content">
+                            <h3>Mobile Banking App</h3>
+                            <p>A secure and user-friendly mobile app for a new bank.</p>
+                            <a href="#" aria-label="View project for Mobile Banking App">View Project</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact">
+            <div class="container">
+                <h2>Get In Touch</h2>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <wa-icon name="mail-line"></wa-icon>
+                        <div>
+                            <strong>Email Us</strong><br>
+                            <a href="mailto:hello@innovate.agency">hello@innovate.agency</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <wa-icon name="phone-line"></wa-icon>
+                        <div>
+                            <strong>Call Us</strong><br>
+                            <a href="tel:+1234567890">(123) 456-7890</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <wa-icon name="map-pin-line"></wa-icon>
+                        <div>
+                            <strong>Visit Us</strong><br>
+                            <span>123 Innovation Dr, Tech City</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- FOOTER -->
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2024 Innovate Digital Agency. All Rights Reserved.</p>
+        </div>
+    </footer>
+    
+</body>
+</html>

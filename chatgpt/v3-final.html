@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ChatGpt - V3</title>
+
+  <script src="https://kit.webawesome.com/3f7e735c263b4439.js" crossorigin="anonymous"></script>
+
+  <style>
+    .wa3-root{
+      --wa-color-blue-60: #2563eb;
+      --wa-color-neutral-95: #f3f4f6;
+      --wa-color-brand-50: #06b6d4;
+      --wa-surface: #071022;
+      --wa-radius: 12px;
+      --max-width:1200px;
+      --container-padding:1rem;
+    }
+
+    :root{
+      --wa-color-blue-60: #2563eb;
+      --wa-color-neutral-95: #f3f4f6;
+      --wa-color-brand-50: #06b6d4;
+      --wa-surface: #071022;
+    }
+
+    html{height:100%;}
+    body{min-height:100vh;margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial;background:linear-gradient(180deg,#0f1724 0%,#071021 80%);color:#f3f4f6;-webkit-font-smoothing:antialiased;line-height:1.5}
+    .wa3-root .page{max-width:var(--max-width);margin:0 auto;padding:1.5rem var(--container-padding)}
+    .wa3-root .hero{display:grid;grid-template-columns:1fr;gap:1.25rem;align-items:center;padding:3rem 0}
+    .wa3-root .headline{font-size:clamp(1.6rem,4vw,2.8rem);font-weight:700;color:#ffffff;letter-spacing:-0.02em}
+    .wa3-root .subhead{color:#d1d5db;font-size:1.05rem;max-width:64ch;line-height:1.65}
+    wa-button[variant="primary"]{display:inline-flex;align-items:center;gap:.5rem;background:#2563eb;color:#ffffff;padding:.85rem 1.25rem;border-radius:10px;border:none;font-weight:600;cursor:pointer;box-shadow:0 4px 12px rgba(37,99,235,0.25)}
+    wa-button[variant="ghost"]{display:inline-flex;align-items:center;padding:.7rem 1rem;border-radius:10px;border:1px solid rgba(255,255,255,0.12);background:transparent;color:#f3f4f6;cursor:pointer}
+    wa-button[variant="ghost"]:hover{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.2)}
+    .wa3-root .cta-row{display:flex;gap:.75rem;flex-wrap:wrap}
+    .wa3-root .hero-visual{display:flex;justify-content:center;align-items:center}
+    .wa3-root .hero-card{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));padding:1rem;border-radius:var(--wa-radius);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.06)}
+    .wa3-root .services{margin:3rem 0;container-type:inline-size;container-name:services}
+    .wa3-root .services-grid{display:grid;grid-template-columns:1fr;gap:1rem}
+    @container services (min-width:700px){.wa3-root .services-grid{grid-template-columns:repeat(2,1fr)}}
+    @container services (min-width:1000px){.wa3-root .services-grid{grid-template-columns:repeat(3,1fr)}}
+    .service-card{display:flex;gap:1rem;align-items:flex-start;padding:1.25rem;border-radius:12px;background:#1a2332;border:1px solid rgba(255,255,255,0.1);transition:transform .2s,box-shadow .2s}
+    .service-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.3)}
+    .service-icon{width:44px;height:44px;flex:0 0 44px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(180deg,#2563eb,#06b6d4)}
+    .service-card:has(input[type="checkbox"]:checked){border-color:rgba(34,197,94,0.6);box-shadow:0 14px 40px rgba(34,197,94,0.12);transform:translateY(-6px)}
+    .service-title{font-weight:700;color:#ffffff;font-size:1.05rem;margin-bottom:.35rem}
+    .service-desc{color:#d1d5db;font-size:.95rem;line-height:1.5}
+    .wa3-root .portfolio{margin:3rem 0}
+    .wa3-root .portfolio-grid{display:grid;grid-template-columns:1fr;gap:.75rem}
+    @media(min-width:700px){.wa3-root .portfolio-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(min-width:1000px){.wa3-root .portfolio-grid{grid-template-columns:repeat(3,1fr)}}
+    wa-card.project-card{border-radius:12px;overflow:hidden;background:#1a2332;border:1px solid rgba(255,255,255,0.1)}
+    .project-image{width:100%;height:180px;object-fit:cover}
+    .project-body{padding:1rem}
+    .wa3-root .contact{margin:3rem 0;padding:1.5rem;border-radius:12px;background:#1a2332;border:1px solid rgba(255,255,255,0.1)}
+    .contact-list{display:flex;flex-direction:column;gap:.75rem;margin-top:1rem}
+    .contact-item{display:flex;gap:.75rem;align-items:center}
+    footer{padding:1.5rem 0;color:#9ca3af;font-size:.9rem;border-top:1px solid rgba(255,255,255,0.05);margin-top:2rem}
+    .visually-hidden{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px,1px,1px,1px);white-space:nowrap}
+    .muted{color:#9ca3af;font-size:.95rem}
+    .section-title{font-size:1.85rem;font-weight:700;color:#ffffff;margin:0 0 1.25rem;letter-spacing:-0.01em}
+    #pricing-popover{margin:auto;border:1px solid rgba(0,0,0,0.1);padding:0;box-shadow:0 20px 50px rgba(0,0,0,0.5);border-radius:12px}
+    #pricing-popover::backdrop{background:rgba(0,0,0,0.6)}
+    @media(min-width:900px){.wa3-root .hero{grid-template-columns:1fr 380px}}
+  </style>
+</head>
+<body>
+  <div class="wa3-root">
+    <main class="page">
+      <section class="hero" aria-labelledby="hero-title">
+        <div>
+          <p class="muted">Digital Agency · Design & Development</p>
+          <h1 id="hero-title" class="headline">We craft beautiful digital experiences</h1>
+          <p class="subhead">A small team of designers and engineers building focused brands, products and campaigns. We combine strategy, design and engineering to deliver measurable outcomes.</p>
+          <div class="cta-row" style="margin-top:1rem">
+            <wa-button variant="primary" id="primary-cta">Start a project</wa-button>
+            <wa-button variant="ghost" id="pricing-btn">Pricing</wa-button>
+            <wa-button variant="ghost" onclick="document.getElementById('portfolio').scrollIntoView({behavior:'smooth'})">Our work</wa-button>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-card" aria-hidden="true">
+            <svg width="220" height="120" viewBox="0 0 220 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect x="2" y="2" width="216" height="116" rx="10" fill="url(#g)"/>
+              <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#1143ff" stop-opacity="0.85"/><stop offset="1" stop-color="#00d18a" stop-opacity="0.85"/></linearGradient></defs>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <section class="services" aria-labelledby="services-title">
+        <h2 id="services-title" class="section-title">Services</h2>
+        <div class="services-grid">
+          <label class="service-card" for="s1-toggle">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M3 12h18" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M12 3v18" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <input type="checkbox" id="s1-toggle" class="visually-hidden" aria-hidden="true"/>
+            <div class="service-details">
+              <div class="service-title">Brand Strategy</div>
+              <div class="service-desc">Clarify your message, position your product and create a strategy that scales.</div>
+            </div>
+          </label>
+
+          <label class="service-card" for="s2-toggle">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M3 7h18M3 12h18M3 17h18" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <input type="checkbox" id="s2-toggle" class="visually-hidden" aria-hidden="true"/>
+            <div class="service-details">
+              <div class="service-title">UX / UI Design</div>
+              <div class="service-desc">User-centred design — prototypes, flows and visual systems that convert.</div>
+            </div>
+          </label>
+
+          <label class="service-card" for="s3-toggle">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M4 20h16V8H4v12zM9 4h6v4H9V4z" stroke="#fff" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <input type="checkbox" id="s3-toggle" class="visually-hidden" aria-hidden="true"/>
+            <div class="service-details">
+              <div class="service-title">Web Development</div>
+              <div class="service-desc">Modern front-end, accessible components and scalable backend integrations.</div>
+            </div>
+          </label>
+
+          <label class="service-card" for="s4-toggle">
+            <div class="service-icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="12" cy="8" r="3" stroke="#fff" stroke-width="1.3"/>
+                <path d="M4 21c2-4 6-6 8-6s6 2 8 6" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <input type="checkbox" id="s4-toggle" class="visually-hidden" aria-hidden="true"/>
+            <div class="service-details">
+              <div class="service-title">Marketing & Growth</div>
+              <div class="service-desc">Campaigns, analytics and growth loops tuned for retention and revenue.</div>
+            </div>
+          </label>
+        </div>
+      </section>
+
+      <section id="portfolio" class="portfolio" aria-labelledby="portfolio-title">
+        <h2 id="portfolio-title" class="section-title">Selected Projects</h2>
+        <div class="portfolio-grid" role="list">
+          <wa-card class="project-card" role="listitem" aria-label="Project Alpha">
+            <img class="project-image" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='700' viewBox='0 0 1200 700' preserveAspectRatio='xMidYMid slice'><rect width='100%' height='100%' fill='%2308142A'/><circle cx='220' cy='120' r='68' fill='%23007bff' opacity='0.9'/><rect x='400' y='200' rx='18' ry='18' width='560' height='300' fill='%2300d18a' opacity='0.9'/></svg>" alt="Project Alpha preview"/>
+            <div class="project-body"><h3 style="margin:.2rem 0;color:#fff">Project Alpha</h3><p style="margin:0;color:rgba(243,244,246,0.85)">Brand refresh and marketing site for a fintech startup.</p></div>
+          </wa-card>
+          <wa-card class="project-card" role="listitem" aria-label="Project Beta">
+            <img class="project-image" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='700' viewBox='0 0 1200 700'><rect width='100%' height='100%' fill='%2311202B'/><polygon points='0,400 1200,0 1200,700' fill='%23006fff' opacity='0.85'/></svg>" alt="Project Beta preview"/>
+            <div class="project-body"><h3 style="margin:.2rem 0;color:#fff">Project Beta</h3><p style="margin:0;color:rgba(243,244,246,0.85)">E-commerce redesign with conversion optimisation.</p></div>
+          </wa-card>
+          <wa-card class="project-card" role="listitem" aria-label="Project Gamma">
+            <img class="project-image" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='700' viewBox='0 0 1200 700'><rect width='100%' height='100%' fill='%230b1b2b'/><circle cx='950' cy='500' r='240' fill='%2322c55e' opacity='0.75'/></svg>" alt="Project Gamma preview"/>
+            <div class="project-body"><h3 style="margin:.2rem 0;color:#fff">Project Gamma</h3><p style="margin:0;color:rgba(243,244,246,0.85)">Mobile app design and front-end implementation.</p></div>
+          </wa-card>
+        </div>
+      </section>
+
+      <section class="contact" aria-labelledby="contact-title">
+        <h2 id="contact-title" class="section-title" style="color:#fff">Get in touch</h2>
+        <p style="color:rgba(243,244,246,0.85)">Interested in working together? Send a message or book a quick call.</p>
+        <div class="contact-list" style="margin-top:1rem">
+          <div class="contact-item"><wa-icon name="envelope" aria-hidden="true"></wa-icon><div><div style="font-weight:600;color:#fff">hello@digital.agency</div><div style="color:rgba(243,244,246,0.7)">We usually reply in 24–48 hours</div></div></div>
+          <div class="contact-item"><wa-icon name="phone" aria-hidden="true"></wa-icon><div><div style="font-weight:600;color:#fff">+1 (555) 123-456</div><div style="color:rgba(243,244,246,0.7)">Mon–Fri, 9am–6pm PST</div></div></div>
+          <div class="contact-item"><wa-icon name="location-dot" aria-hidden="true"></wa-icon><div><div style="font-weight:600;color:#fff">Remote — Based in USA</div><div style="color:rgba(243,244,246,0.7)">Distributed team</div></div></div>
+        </div>
+      </section>
+
+      <footer><div style="display:flex;justify-content:space-between;align-items:center"><div>© <strong>Digital Agency</strong> • 2025</div><nav aria-label="Footer"><a href="#portfolio" style="color:rgba(243,244,246,0.7);margin-left:1rem">Work</a><a href="#contact" style="color:rgba(243,244,246,0.7);margin-left:1rem">Contact</a></nav></div></footer>
+    </main>
+
+    <div id="pricing-popover" popover>
+      <div style="padding:1.25rem;background:#fff;border-radius:10px;max-width:340px">
+        <h3 style="margin:0 0 .5rem;color:#071022;font-size:1.15rem">Pricing (starting)</h3>
+        <p style="margin:0 0 .5rem;color:rgba(0,0,0,0.75);font-size:.95rem"><strong>$3,500</strong> — Small projects · <strong>$12,000+</strong> — MVPs</p>
+        <p style="margin:0 0 1rem;color:rgba(0,0,0,0.7);font-size:.9rem">Estimates vary — tell us about your project for a tailored quote.</p>
+        <wa-button variant="primary" id="popover-close" style="width:100%">Close</wa-button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  document.getElementById('primary-cta')?.addEventListener('click', ()=>{document.getElementById('contact-title')?.scrollIntoView({behavior:'smooth'})});
+
+  // Popover API with wa-button
+  const pricingBtn = document.getElementById('pricing-btn');
+  const popover = document.getElementById('pricing-popover');
+  const closeBtn = document.getElementById('popover-close');
+
+  pricingBtn?.addEventListener('click', () => {
+    popover?.showPopover?.();
+  });
+
+  closeBtn?.addEventListener('click', () => {
+    popover?.hidePopover?.();
+  });
+
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.style.scrollBehavior='auto'}
+</script>
+
+<!-- v3: Fixed contrast, popover functionality, and full viewport background -->
+</body>
+</html>

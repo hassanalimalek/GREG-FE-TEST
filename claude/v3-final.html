@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude - V3</title>
+    
+    <!-- Web Awesome Framework CDN (Correct Version) -->
+    <script src="https://kit.webawesome.com/3f7e735c263b4439.js" crossorigin="anonymous"></script>
+    
+    <style>
+        :root {
+            /* Web Awesome color variables (using correct 2-digit tint system) */
+            --wa-color-primary: var(--wa-color-blue-60, #2563eb);
+            --wa-color-primary-hover: var(--wa-color-blue-70, #1d4ed8);
+            --wa-color-secondary: var(--wa-color-purple-60, #9333ea);
+            --wa-color-success: var(--wa-color-green-60, #16a34a);
+            --wa-color-danger: var(--wa-color-red-60, #dc2626);
+            --wa-color-warning: var(--wa-color-yellow-60, #ca8a04);
+            --wa-color-info: var(--wa-color-cyan-60, #0891b2);
+            --wa-color-dark: #000000;
+            --wa-color-light: var(--wa-color-gray-10, #f3f4f6);
+            --wa-color-white: #ffffff;
+            --wa-color-bg: var(--wa-color-gray-05, #f9fafb);
+            
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            --spacing-2xl: 4rem;
+            
+            /* Typography */
+            --font-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 2rem;
+            --font-size-4xl: 2.5rem;
+            --font-size-5xl: 3rem;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            line-height: 1.6;
+            color: var(--wa-color-dark);
+            background-color: var(--wa-color-bg);
+        }
+
+        wa-button {
+            --background: var(--wa-color-white);
+            --color: var(--wa-color-primary);
+            --border-radius: 50px;
+            font-weight: bold;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.8s ease 0.4s both;
+            display: inline-block;
+        }
+
+        wa-button:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        wa-button[variant="primary"] {
+            --background: var(--wa-color-primary);
+            --color: var(--wa-color-white);
+        }
+
+        wa-button[variant="secondary"] {
+            --background: var(--wa-color-white);
+            --color: var(--wa-color-primary);
+        }
+
+        wa-card {
+            display: block;
+            background: var(--wa-color-light);
+            border-radius: 12px;
+            padding: var(--spacing-lg);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        wa-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+            background: var(--wa-color-white);
+        }
+
+        wa-icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            color: currentColor;
+        }
+
+        .service-card wa-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto var(--spacing-md);
+            color: var(--wa-color-primary);
+        }
+
+        .contact-icon wa-icon {
+            width: 40px;
+            height: 40px;
+            color: var(--wa-color-primary);
+        }
+
+        @container (min-width: 320px) {
+            wa-card.service-card {
+                padding: var(--spacing-md);
+            }
+        }
+
+        @container (min-width: 480px) {
+            wa-card.service-card {
+                padding: var(--spacing-lg);
+            }
+            wa-card.service-card h3 {
+                font-size: var(--font-size-xl);
+            }
+        }
+
+        .services-grid {
+            container-type: inline-size;
+            container-name: services;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        header:has(.mobile-menu.active) {
+            background-color: var(--wa-color-white);
+            box-shadow: var(--shadow-lg);
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--wa-color-white);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 0;
+            min-height: 70px;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: var(--wa-color-primary);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-links a {
+            color: var(--wa-color-dark);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--wa-color-primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--wa-color-primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: var(--spacing-xs);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, var(--wa-color-primary), var(--wa-color-secondary));
+            color: var(--wa-color-white);
+            position: relative;
+            overflow: hidden;
+            margin-top: 60px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: var(--spacing-xl) 0;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: var(--spacing-md);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero p {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-lg);
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .info-icon {
+            display: inline-block;
+            margin-left: var(--spacing-xs);
+            cursor: help;
+            vertical-align: middle;
+        }
+
+        [popover] {
+            background: var(--wa-color-white);
+            border: 1px solid var(--wa-color-light);
+            border-radius: 8px;
+            padding: var(--spacing-md);
+            box-shadow: var(--shadow-lg);
+            max-width: 300px;
+            margin: auto;
+        }
+
+        [popover]:popover-open {
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .services {
+            padding: var(--spacing-2xl) 0;
+            background: var(--wa-color-white);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--spacing-xl);
+            color: var(--wa-color-dark);
+            font-weight: 700;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+        }
+
+        .services-grid:has(wa-card:hover) wa-card:not(:hover) {
+            opacity: 0.7;
+            transform: scale(0.98);
+        }
+
+        .service-card {
+            background: var(--wa-color-white);
+            border-radius: 12px;
+            padding: var(--spacing-lg);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto var(--spacing-md);
+            color: var(--wa-color-primary);
+        }
+
+        .service-card h3 {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-sm);
+            color: var(--wa-color-dark);
+            font-weight: 600;
+        }
+
+        .service-card p {
+            color: var(--wa-color-gray-70, #374151);
+            line-height: 1.6;
+        }
+
+        .portfolio {
+            padding: var(--spacing-2xl) 0;
+            background: var(--wa-color-white);
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-xl);
+        }
+
+        wa-card.portfolio-card:has(.portfolio-overlay:hover) {
+            transform: scale(1.02);
+        }
+
+        wa-card.portfolio-card {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--wa-color-white);
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            aspect-ratio: 16/9;
+            padding: 0;
+        }
+
+        wa-card.portfolio-card:hover {
+            box-shadow: var(--shadow-xl);
+        }
+
+        .portfolio-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .portfolio-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: var(--wa-color-white);
+            padding: var(--spacing-lg);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        wa-card.portfolio-card:hover .portfolio-overlay {
+            transform: translateY(0);
+        }
+
+        .contact {
+            padding: var(--spacing-2xl) 0;
+            background: var(--wa-color-dark);
+            color: var(--wa-color-white);
+        }
+
+        .contact .section-title {
+            color: var(--wa-color-white);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-xl);
+            text-align: center;
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            color: var(--wa-color-primary);
+        }
+
+        .contact-item h3 {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .contact-item p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        footer {
+            background: var(--wa-color-dark);
+            color: var(--wa-color-white);
+            text-align: center;
+            padding: var(--spacing-xl);
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        footer p {
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+            }
+            
+            .mobile-menu-toggle {
+                display: none;
+            }
+            
+            .hero-content {
+                text-align: left;
+                max-width: 600px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .services-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        a:focus,
+        button:focus {
+            outline: 2px solid var(--wa-color-primary);
+            outline-offset: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">Nexus Digital</a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <wa-button class="mobile-menu-toggle" variant="ghost" aria-label="Toggle mobile menu">
+                <wa-icon name="bars"></wa-icon>
+            </wa-button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Transform Your Digital Presence</h1>
+                <p>We craft innovative digital experiences that drive growth and engage your audience</p>
+                <div style="display: inline-block; position: relative;">
+                    <wa-button href="#services" variant="secondary" id="get-started-btn">
+                        Get Started
+                        <wa-icon name="circle-info" id="info-icon" style="margin-left: 8px; font-size: 18px; cursor: help;"></wa-icon>
+                    </wa-button>
+                    <!-- Native Popover element - uses the Popover API -->
+                    <div id="info-popover" popover>
+                        <strong>Free Consultation</strong>
+                        <p>Get a free 30-minute consultation to discuss your project needs and goals.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <h2 class="section-title">Our Services</h2>
+            <div class="services-grid">
+                <!-- Service Card 1 -->
+                <wa-card class="service-card">
+                    <wa-icon name="desktop" style="font-size: 60px; color: var(--wa-color-primary); display: block; margin: 0 auto 1rem;"></wa-icon>
+                    <h3>Web Design</h3>
+                    <p>Beautiful, responsive websites that convert visitors into customers with modern design principles.</p>
+                </wa-card>
+
+                <!-- Service Card 2 -->
+                <wa-card class="service-card">
+                    <wa-icon name="mobile-screen-button" style="font-size: 60px; color: var(--wa-color-primary); display: block; margin: 0 auto 1rem;"></wa-icon>
+                    <h3>App Development</h3>
+                    <p>Native and cross-platform mobile applications that deliver exceptional user experiences.</p>
+                </wa-card>
+
+                <!-- Service Card 3 -->
+                <wa-card class="service-card">
+                    <wa-icon name="bullhorn" style="font-size: 60px; color: var(--wa-color-primary); display: block; margin: 0 auto 1rem;"></wa-icon>
+                    <h3>Digital Marketing</h3>
+                    <p>Data-driven marketing strategies that increase your online visibility and ROI.</p>
+                </wa-card>
+
+                <!-- Service Card 4 -->
+                <wa-card class="service-card">
+                    <wa-icon name="magnifying-glass-chart" style="font-size: 60px; color: var(--wa-color-primary); display: block; margin: 0 auto 1rem;"></wa-icon>
+                    <h3>SEO Optimization</h3>
+                    <p>Improve your search rankings and drive organic traffic with proven SEO techniques.</p>
+                </wa-card>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio">
+        <div class="container">
+            <h2 class="section-title">Recent Projects</h2>
+            <div class="portfolio-grid">
+                <!-- Portfolio Card 1 -->
+                <wa-card class="portfolio-card">
+                    <svg style="width: 100%; height: 100%;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice">
+                        <defs>
+                            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="100%" height="100%" fill="#0f172a"/>
+                        <circle cx="300" cy="200" r="120" fill="url(#grad1)" opacity="0.6"/>
+                        <rect x="500" y="300" width="400" height="250" rx="20" fill="url(#grad1)" opacity="0.7"/>
+                        <circle cx="900" cy="150" r="80" fill="#06b6d4" opacity="0.5"/>
+                    </svg>
+                    <div class="portfolio-overlay">
+                        <h3>E-Commerce Platform</h3>
+                        <p>Modern online shopping experience with AI-powered recommendations</p>
+                    </div>
+                </wa-card>
+
+                <!-- Portfolio Card 2 -->
+                <wa-card class="portfolio-card">
+                    <svg style="width: 100%; height: 100%;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice">
+                        <defs>
+                            <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#9333ea;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="100%" height="100%" fill="#1a0b2e"/>
+                        <polygon points="0,400 600,100 1200,500 1200,700 0,700" fill="url(#grad2)" opacity="0.6"/>
+                        <circle cx="800" cy="250" r="100" fill="#ec4899" opacity="0.5"/>
+                    </svg>
+                    <div class="portfolio-overlay">
+                        <h3>SaaS Dashboard</h3>
+                        <p>Intuitive analytics platform for business intelligence</p>
+                    </div>
+                </wa-card>
+
+                <!-- Portfolio Card 3 -->
+                <wa-card class="portfolio-card">
+                    <svg style="width: 100%; height: 100%;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice">
+                        <defs>
+                            <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#16a34a;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#10b981;stop-opacity:1" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="100%" height="100%" fill="#0a2818"/>
+                        <circle cx="850" cy="400" r="280" fill="url(#grad3)" opacity="0.6"/>
+                        <rect x="100" y="100" width="350" height="400" rx="180" fill="#10b981" opacity="0.4"/>
+                    </svg>
+                    <div class="portfolio-overlay">
+                        <h3>Mobile Banking App</h3>
+                        <p>Secure and user-friendly financial management solution</p>
+                    </div>
+                </wa-card>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="contact-grid">
+                <!-- Contact Item 1 -->
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <wa-icon name="envelope" style="font-size: 40px;"></wa-icon>
+                    </div>
+                    <h3>Email</h3>
+                    <p>hello@nexusdigital.com</p>
+                </div>
+
+                <!-- Contact Item 2 -->
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <wa-icon name="phone" style="font-size: 40px;"></wa-icon>
+                    </div>
+                    <h3>Phone</h3>
+                    <p>+1 (555) 123-4567</p>
+                </div>
+
+                <!-- Contact Item 3 -->
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <wa-icon name="location-dot" style="font-size: 40px;"></wa-icon>
+                    </div>
+                    <h3>Location</h3>
+                    <p>San Francisco, CA</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Nexus Digital. All rights reserved.</p>
+            <p style="margin-top: 10px; font-size: 14px; color: rgba(255, 255, 255, 0.85);">Built with Web Awesome Framework</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const mobileMenu = document.querySelector('.nav-links');
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', () => {
+                mobileMenu.classList.toggle('active');
+            });
+        }
+
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            const header = document.querySelector('header');
+            
+            if (currentScroll > 100) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+                header.style.boxShadow = 'var(--shadow-md)';
+            } else {
+                header.style.background = 'rgba(255, 255, 255, 0.95)';
+                header.style.boxShadow = 'none';
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        const popover = document.getElementById('info-popover');
+        const infoIcon = document.getElementById('info-icon');
+
+        if (popover && infoIcon) {
+            infoIcon.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                popover.togglePopover();
+            });
+
+            popover.addEventListener('toggle', (event) => {
+                if (event.newState === 'open') {
+                    setTimeout(() => {
+                        if (popover.matches(':popover-open')) {
+                            popover.hidePopover();
+                        }
+                    }, 5000);
+                }
+            });
+        }
+
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.portfolio-image').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+    </script>
+</body>
+</html>

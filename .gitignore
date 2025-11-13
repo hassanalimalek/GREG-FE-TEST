@@ -1,0 +1,5 @@
+# Ignore all files in docs folder
+docs/*
+
+# Except prompt.md - this should be committed
+!docs/prompt.md
